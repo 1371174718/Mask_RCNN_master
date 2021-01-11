@@ -1,0 +1,69 @@
+mask_rcnn基本流程
+
+1、训练
+1)labelme进行目标物体标记，生成json文件，含点坐标、以及各个物体的标签label;
+json文件的格式：（在balloon.py中提到）
+# { 'filename': '28503151_5b5b7ec140_b.jpg',
+        #   'regions': {
+        #       '0': {
+        #           'region_attributes': {},
+        #           'shape_attributes': {
+        #               'all_points_x': [...],
+        #               'all_points_y': [...],
+        #               'name': 'polygon'}},
+        #       ... more regions ...
+        #   },
+        #   'size': 100202
+        # }
+
+2)修改E:\gitHubProjects\Mask_RCNN-master\Mask_RCNN-master\samples\balloon\balloon.py代码
+
+将：
+if args.weights.lower() == "coco":
+        # Exclude the last layers because they require a matching
+        # number of classes,coco数据集含有80个类，但是对于通常来说，只有前景和背景两类，因此
+        #需要将if。。=coco给注释掉
+    model.load_weights(weights_path, by_name=True, exclude=[
+        "mrcnn_class_logits", "mrcnn_bbox_fc",
+        "mrcnn_bbox", "mrcnn_mask"])
+     else:
+         model.load_weights(weights_path, by_name=True)
+改成：
+model.load_weights(weights_path, by_name=True, exclude=[
+        "mrcnn_class_logits", "mrcnn_bbox_fc",
+        "mrcnn_bbox", "mrcnn_mask"])
+
+3)利用balloon.py修改后的进行训练，注意需要修改的地方：
+class BalloonConfig(Config):
+    """Configuration for training on the toy  dataset.
+    Derives from the base Config class and overrides some values.
+    """
+    # Give the configuration a recognizable name
+    NAME = "balloonDataset"
+
+    # We use a GPU with 12GB memory, which can fit two images.
+    # Adjust down if you use a smaller GPU.
+    IMAGES_PER_GPU = 1 # 每个GPU同时训练的图片数，如果是CPU建议修改为1
+
+    # Number of classes (including background)
+    # 类别数，一般是你自己数据物体的类别数+1（+1是背景），coco默认的是80+1类
+    NUM_CLASSES = 1 + 1  # Background + balloonDataset
+
+    # Number of training steps per epoch # 每一个迭代循环的步长数
+    STEPS_PER_EPOCH = 100
+
+    # Skip detections with < 90% confidence 置信度，小于这个则跳过检测，提高检测效率
+    DETECTION_MIN_CONFIDENCE = 0.9
+除了上面的，还可以修改训练好的模型存放的位置，一般存放在E:\gitHubProjects\Mask_RCNN-master\Mask_RCNN-master\logs
+
+4) 利用命令行进行训练，具体命令见：见“E:\gitHubProjects\Mask_RCNN-master\Mask_RCNN-master\samples\balloon\README.md”
+python3 balloon.py train --dataset=dataset_path --weights=weughts_path
+
+2、测试
+1)修改E:\gitHubProjects\Mask_RCNN-master\Mask_RCNN-master\samples\coco\coco.py代码
+将：
+NUM_CLASSES = 1+80
+改成:
+NUM_CLASSES = 1+1(背景+目标)————根据自己的类别数进行修改
+1)修改E:\gitHubProjects\Mask_RCNN-master\Mask_RCNN-master\samples\demo.py代码
+修改MODEL_DIR、COCO_MODEL_PATH（训练好的模型）、IMAGE_DIR（测试集图片）、class_names（类别名称）=["BG","","",...]

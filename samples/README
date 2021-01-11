@@ -1,0 +1,7 @@
+### ../balloon/balloon.py是一个演示如何利用预训练模型（即参数初始化的值）来进行模型训练
+
+### ../balloon/mask_rcnn_coco.h5 预训练好的权重文件
+
+### ..\balloon\balloonDataset 训练数据集和预测数据集
+
+### demo.py 是一个演示调用训练好的模型进行测试预测的示例代码
