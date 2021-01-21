@@ -61,7 +61,6 @@ model.load_weights(COCO_MODEL_PATH, by_name=True)
 # the teddy bear class, use: class_names.index('teddy bear')coco数据集所有的类名称，列表索引号就是类别号
 class_names = ['BG', 'polygon']
 
-
 ###########################################################################
 # Load a random image from the images folder任意加载一张图片进行目标检测
 file_names = next(os.walk(IMAGE_DIR))[2]
