@@ -25,7 +25,7 @@ from mrcnn.model import log
 MODEL_DIR = os.path.join(ROOT_DIR, "logs")
 
 # Local path to trained weights file
-COCO_MODEL_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
+COCO_MODEL_PATH = os.path.join(ROOT_DIR, "mask_rcnn_balloon_0030.h5")
 # Download COCO trained weights from Releases if needed
 if not os.path.exists(COCO_MODEL_PATH):
     utils.download_trained_weights(COCO_MODEL_PATH)
@@ -112,8 +112,8 @@ model = modellib.MaskRCNN(mode="inference",
 
 # Get path to saved weights
 # Either set a specific path or find last trained weights
-# model_path = os.path.join(ROOT_DIR, ".h5 file name here")
-model_path = model.find_last()
+model_path = os.path.join(ROOT_DIR, "logs\mask_rcnn_shapes.h5")
+# model_path = model.find_last()
 
 # Load trained weights
 print("Loading weights from ", model_path)

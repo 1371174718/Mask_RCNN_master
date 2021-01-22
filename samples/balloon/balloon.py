@@ -26,7 +26,7 @@ Usage: import the module (see Jupyter notebooks for examples), or run from
     # Apply color splash to video using the last weights you trained
     python3 balloon.py splash --weights=last --video=<URL or path to file>
     
-    # python balloon.py train --dataset="E:\gitHubProjects\Mask_RCNN-master\Mask_RCNN-master\samples\balloon\balloonDataset" --weights="E:\gitHubProjects\Mask_RCNN-master\Mask_RCNN-master\samples\balloon\mask_rcnn_coco.h5"
+    # python balepochsloon.py train --dataset="E:\gitHubProjects\Mask_RCNN-master\Mask_RCNN-master\samples\balloon\balloonDataset" --weights="E:\gitHubProjects\Mask_RCNN-master\Mask_RCNN-master\samples\balloon\mask_rcnn_coco.h5"
 
 """
 
