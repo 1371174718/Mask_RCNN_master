@@ -20,7 +20,6 @@ from mrcnn.model import log
 # Directory to save logs and trained model
 MODEL_DIR = os.path.join(ROOT_DIR, "logs")
 
-
 # %%
 
 class BalloonConfig(Config):
@@ -77,10 +76,9 @@ def data_split(full_list, ratio, shuffle=False):
 	sublist_2 = full_list[offset:]
 	return sublist_1, sublist_2
 
-
 from pathlib import Path
 config = BalloonConfig()
-dataset_root_path = r'D:\宜昌\zhiwei_3D\saveImgFiles'
+dataset_root_path = r'E:\GitHub_Projects\Mask_RCNN_master\samples\compute_map\saveImgFiles'
 # dataset_root_path = r'D:\宜昌\zhiwei_3D\tuyang_json_img'
 # os.path.join(ROOT_DIR, "train_data\\train_1")
 path = Path(dataset_root_path)
@@ -118,7 +116,7 @@ model = modellib.MaskRCNN(mode="inference",
 
 # Get path to saved weights
 # Either set a specific path or find last trained weights
-model_path = r"D:\宜昌\zhiwei_3D\logs\mask_rcnn_balloon_0030.h5"
+model_path = r"E:\GitHub_Projects\Mask_RCNN_master\logs\mask_rcnn_balloon_0030.h5"
 # model_path = r"D:\宜昌\zhiwei_3D\tuyang_json_img\mask_rcnn_balloon_0030.h5"
 # model_path = model.find_last()
 
