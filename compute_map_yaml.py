@@ -102,8 +102,8 @@ class DrugDataset(utils.Dataset):
 				for j in range(info['height']):
 					# print("image_id-->",image_id,"-i--->",i,"-j--->",j)
 					# print("info[width]----->",info['width'],"-info[height]--->",info['height'])
-					at_pixel = image.getpixel((i, j))
-					if at_pixel == index + 1:
+					at_pixel = image.getpixel((i, j)) # 获得（i,j）处的像素值
+					if at_pixel == index + 1: # 如果像素值是当前检测物体的mask像素值，则将对应层的值置为1
 						mask[j, i, index] = 1
 		return mask
 
@@ -147,12 +147,12 @@ class DrugDataset(utils.Dataset):
 		count = 1  # number of object
 		img = Image.open(info['mask_path']) # 利用PIL.Image打开掩模图像
 		num_obj = self.get_obj_index(img) # mask个人理解是不同的物体用不同的像素值来表示，首先背景为0，其他的不同物体依次从1递增，因此利用max可以知道图中物体个数
-		mask = np.zeros([info['height'], info['width'], num_obj], dtype=np.uint8)
-		mask = self.draw_mask(num_obj, mask, img, image_id)
-		occlusion = np.logical_not(mask[:, :, -1]).astype(np.uint8)
+		mask = np.zeros([info['height'], info['width'], num_obj], dtype=np.uint8) # 生成多层mask，每一个实例物体生成一个mask，在深度上叠加
+		# 这一步其实就是将多个实体的mask分割开了，开始得到的mask_path是所有物体的掩模
+		mask = self.draw_mask(num_obj, mask, img, image_id) #
+		occlusion = np.logical_not(mask[:, :, -1]).astype(np.uint8) # 逻辑非，0->1,非0->0，返回bool型
 		for i in range(count - 2, -1, -1):
-			mask[:, :, i] = mask[:, :, i] * occlusion
-
+			mask[:, :, i] = mask[:, :, i] * occlusion # True的地方保留原值，false地方置为0
 			occlusion = np.logical_and(occlusion, np.logical_not(mask[:, :, i]))
 		labels = []
 		labels = self.from_yaml_get_class(image_id)
@@ -167,25 +167,6 @@ class DrugDataset(utils.Dataset):
 
 		class_ids = np.array([self.class_names.index(s) for s in labels_form])
 		return mask, class_ids.astype(np.int32)
-
-
-def get_ax(rows=1, cols=1, size=8):
-	"""Return a Matplotlib Axes array to be used in
-	all visualizations in the notebook. Provide a
-	central point to control graph sizes.
-	Change the default size attribute to control the size
-	of rendered images
-	"""
-	_, ax = plt.subplots(rows, cols, figsize=(size * cols, size * rows))
-	return ax
-
-
-def list2array(list):
-	b = np.array(list[0])
-	for i in range(1, len(list)):
-		b = np.append(b, list[i], axis=0)
-	return b
-
 
 def text_save(filename, data):  # filename为写入CSV文件的路径，data为要写入数据列表.
 	file = open(filename, 'a')
@@ -208,14 +189,12 @@ dataset_test = DrugDataset() # 实例化
 dataset_test.load_shapes(count, img_floder, mask_floder, imglist, dataset_root_path)
 dataset_test.prepare()
 
-
 # mAP
 # Compute VOC-Style mAP @ IoU=0.5
 # Running on 10 images. Increase for better accuracy.
 class InferenceConfig(ShapesConfig):
 	GPU_COUNT = 1
 	IMAGES_PER_GPU = 1
-
 
 inference_config = InferenceConfig()
 
