@@ -45,8 +45,6 @@ class InferenceConfig(coco.CocoConfig):
 config = InferenceConfig()
 config.display()
 
-
-
 #########################################################
 # Create model object in inference mode.model是已经训练好的模型
 # model_dir:Directory to save training logs and trained weights

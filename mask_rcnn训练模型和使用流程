@@ -55,9 +55,21 @@ class BalloonConfig(Config):
     # Skip detections with < 90% confidence 置信度，小于这个则跳过检测，提高检测效率
     DETECTION_MIN_CONFIDENCE = 0.9
 除了上面的，还可以修改训练好的模型存放的位置，一般存放在E:\gitHubProjects\Mask_RCNN-master\Mask_RCNN-master\logs
+以及训练的代数：epochs=30
+    model.train(dataset_train, dataset_val,
+                learning_rate=config.LEARNING_RATE,
+                epochs=30,
+                layers='heads')
 
 4) 利用命令行进行训练，具体命令见：见“E:\gitHubProjects\Mask_RCNN-master\Mask_RCNN-master\samples\balloon\README.md”
-python3 balloon.py train --dataset=dataset_path --weights=weughts_path
+python3 balloon.py train --dataset=dataset_path --weights=weights_path
+
+python block.py train --dataset=E:\GitHub_Projects\Mask_RCNN_master\samples\cylinderBlock\blockDataset
+--weights=E:\GitHub_Projects\Mask_RCNN_master\samples\balloon\mask_rcnn_coco.h5
+
+python spot.py train --dataset=E:\GitHub_Projects\Mask_RCNN_master\samples\spot\spotDataset
+--weights=E:\GitHub_Projects\Mask_RCNN_master\samples\balloon\mask_rcnn_coco.h5
+
 
 2、测试
 1)修改E:\gitHubProjects\Mask_RCNN-master\Mask_RCNN-master\samples\coco\coco.py代码
